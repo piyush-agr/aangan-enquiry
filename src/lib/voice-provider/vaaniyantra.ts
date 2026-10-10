@@ -163,6 +163,7 @@ export class VaaniYantraAdapter implements VoiceProviderAdapter {
 
   /** GET /calls/:id for transcript + startedAt. Bounded retries; never throws away the event. */
   async enrich(event: NormalisedCallEvent): Promise<NormalisedCallEvent> {
+    if (event.transcript) return event;
     if (!this.cfg.VAANIYANTRA_API_KEY) {
       return { ...event, enrichment: { attempted: false, ok: false, error: "API key not configured" } };
     }

@@ -21,7 +21,16 @@ export default async function SettingsPage() {
       {s.warnings.length ? <div className="alert"><ul style={{ margin: 0, paddingLeft: 18 }}>{s.warnings.map((w) => <li key={w}>{w}</li>)}</ul></div> : null}
       <div className="grid g2">
         <section className="panel">
-          <h2>Voice: VaaniYantra</h2>
+          <h2>Voice: Vaani AI</h2>
+          <dl className="kv">
+            <dt>Mode</dt><dd>{s.voiceProvider === "vaani" ? (s.voiceMode === "LIVE" ? "Live" : "Misconfigured") : s.voiceMode === "MOCK" ? "Off (mock mode)" : "Off (VaaniYantra selected)"}</dd>
+            <dt>API key</dt><dd>{yes(s.vaaniAi.apiKey)} <span className="small muted">for caller number and call cost (credits) from call history</span></dd>
+            <dt>Webhook secret</dt><dd>{yes(s.vaaniAi.webhookSecret)} <span className="small muted">required; unsigned webhooks are rejected</span></dd>
+            <dt>Webhook URL</dt><dd><code>{base ? `${base.replace(/\/$/, "")}/api/webhooks/vaani?key=` : "/api/webhooks/vaani?key="}&lt;VAANI_WEBHOOK_SECRET&gt;</code><br /><span className="small muted">Vaani → Developers → Webhooks → New End Point → Agent Webhook. Use the same secret as its Signing Secret.</span></dd>
+          </dl>
+        </section>
+        <section className="panel">
+          <h2>Voice: VaaniYantra (alternative)</h2>
           <dl className="kv">
             <dt>Mode</dt><dd>{s.voiceMode === "MOCK" ? "Mock (simulator only)" : s.voiceMode === "LIVE" ? "Live" : "Misconfigured"}</dd>
             <dt>API key</dt><dd>{yes(s.vaani.apiKey)} <span className="small muted">for transcripts and start times</span></dd>

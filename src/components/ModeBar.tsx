@@ -7,9 +7,9 @@ export function ModeBar({ demoRecords }: { demoRecords: number }) {
       {s.voiceMode === "MOCK" ? (
         <span className="mode mock">Mock mode: no real calls are being received</span>
       ) : s.voiceMode === "LIVE" ? (
-        <span className="mode live">Live: VaaniYantra webhooks on</span>
+        <span className="mode live">Live: {s.voiceProvider === "vaani" ? "Vaani AI" : "VaaniYantra"} calls are being received</span>
       ) : (
-        <span className="mode bad">VaaniYantra misconfigured — see Settings</span>
+        <span className="mode bad">Voice provider misconfigured: see Settings</span>
       )}
       <span className={`mode ${s.telegram.configured ? "live" : "off"}`}>{s.telegram.configured ? "Telegram connected" : "Telegram not set up"}</span>
       {demoRecords > 0 ? <span className="mode off">{demoRecords} demo records (hidden from metrics unless you include them)</span> : null}

@@ -90,8 +90,8 @@ function collectedDataTurns(cd?: Record<string, unknown>): Turn[] {
     if (v === null || v === undefined || typeof v === "object") continue;
     const key = k.toLowerCase().replace(/[^a-z]/g, "");
     const val = String(v).slice(0, 300);
-    if (["location", "locality", "area", "city", "propertylocation"].includes(key)) turns.push({ role: "CALLER", text: `The property is in ${val}.` });
-    if (["timeline", "deadline", "completionby"].includes(key)) turns.push({ role: "CALLER", text: `We need it done by ${val}.` });
+    if (["location", "locality", "area", "city", "propertylocation", "projectlocation", "sitelocation", "propertyarea"].includes(key)) turns.push({ role: "CALLER", text: `The property is in ${val}.` });
+    if (["timeline", "deadline", "completionby", "completiondate", "projecttimeline"].includes(key)) turns.push({ role: "CALLER", text: `We need it done by ${val}.` });
   }
   return turns;
 }
@@ -107,7 +107,10 @@ function enquiryFields(event: NormalisedCallEvent, f: ExtractedFacts, a: Assessm
   const firstAgent = (transcript ?? []).find((t) => t.role === "AGENT" && t.atMs !== undefined);
   let firstResponseAt: Date | null = null;
   let firstResponseMethod: string | null = null;
-  if (event.startedAt && firstAgent?.atMs !== undefined) {
+  if (event.firstResponse) {
+    firstResponseAt = event.firstResponse.at;
+    firstResponseMethod = event.firstResponse.method;
+  } else if (event.startedAt && firstAgent?.atMs !== undefined) {
     firstResponseAt = new Date(event.startedAt.getTime() + firstAgent.atMs);
     firstResponseMethod = event.isDemo ? "simulated" : "provider startedAt + first AGENT transcript offset";
   }
@@ -202,7 +205,7 @@ export async function processEvent(eventId: string, enrich?: (e: NormalisedCallE
   if (!row) return { enquiryId: null, status: "IN_PROGRESS_ELSEWHERE" };
   try {
     let event = revive((row.payload as { normalised: Record<string, unknown> }).normalised);
-    if (enrich && event.kind === "CALL_COMPLETED" && !event.transcript) event = await enrich(event);
+    if (enrich && event.kind === "CALL_COMPLETED") event = await enrich(event);
 
     const transcript = event.transcript;
     const turns: Turn[] = [...(transcript ?? []).map((t) => ({ role: t.role, text: t.text })), ...collectedDataTurns(event.collectedData)];
@@ -263,6 +266,7 @@ export async function processEvent(eventId: string, enrich?: (e: NormalisedCallE
         provider: event.provider,
         durationSec: event.callStatus === "MISSED" ? 0 : event.durationSec,
         providerCost: event.providerCost,
+        providerUsage: event.providerUsage,
         incurredAt: event.endedAt ?? event.arrivedAt ?? now,
         isDemo: event.isDemo,
       });

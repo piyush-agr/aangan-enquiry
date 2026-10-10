@@ -14,7 +14,11 @@ const schema = z.object({
   SESSION_SECRET: z.string().min(32, "SESSION_SECRET must be at least 32 characters"),
   STUDIO_TIMEZONE: z.string().default("Asia/Kolkata"),
 
-  VOICE_PROVIDER: z.enum(["mock", "vaaniyantra"]).default("mock"),
+  VOICE_PROVIDER: z.enum(["mock", "vaani", "vaaniyantra"]).default("mock"),
+  // Vaani AI (app.vaanivoice.ai) — the platform from the course invite. Names are this app's own.
+  VAANI_API_BASE_URL: z.string().url().default("https://api.vaanivoice.ai"),
+  VAANI_API_KEY: z.string().optional(),
+  VAANI_WEBHOOK_SECRET: z.string().optional(),
   VAANIYANTRA_API_BASE_URL: z.string().url().default("https://vaaniyantra.com/api/v1"),
   VAANIYANTRA_API_KEY: z.string().optional(),
   VAANIYANTRA_WEBHOOK_SECRET: z.string().optional(),
@@ -37,9 +41,10 @@ const schema = z.object({
 export type AppConfig = z.infer<typeof schema>;
 
 export interface IntegrationStatus {
-  voiceProvider: "mock" | "vaaniyantra";
+  voiceProvider: "mock" | "vaani" | "vaaniyantra";
   voiceMode: "MOCK" | "LIVE" | "MISCONFIGURED";
   vaani: { apiKey: boolean; webhookSecret: boolean; agentId: boolean };
+  vaaniAi: { apiKey: boolean; webhookSecret: boolean };
   telegram: { configured: boolean; urgentChat: boolean; sendDemo: boolean };
   cron: boolean;
   warnings: string[];
@@ -79,8 +84,15 @@ export function integrationStatus(cfg: AppConfig = config()): IntegrationStatus 
     webhookSecret: Boolean(cfg.VAANIYANTRA_WEBHOOK_SECRET),
     agentId: Boolean(cfg.VAANIYANTRA_AGENT_ID),
   };
+  const vaaniAi = { apiKey: Boolean(cfg.VAANI_API_KEY), webhookSecret: Boolean(cfg.VAANI_WEBHOOK_SECRET) };
   let voiceMode: IntegrationStatus["voiceMode"] = "MOCK";
-  if (cfg.VOICE_PROVIDER === "vaaniyantra") {
+  if (cfg.VOICE_PROVIDER === "vaani") {
+    if (!vaaniAi.webhookSecret) {
+      voiceMode = "MISCONFIGURED";
+      warnings.push("VOICE_PROVIDER=vaani but VAANI_WEBHOOK_SECRET is missing — webhooks will be rejected (fail closed).");
+    } else voiceMode = "LIVE";
+    if (!vaaniAi.apiKey) warnings.push("VAANI_API_KEY is missing — caller number fallback and call cost (credits) cannot be fetched from call history.");
+  } else if (cfg.VOICE_PROVIDER === "vaaniyantra") {
     if (!vaani.webhookSecret) {
       voiceMode = "MISCONFIGURED";
       warnings.push("VOICE_PROVIDER=vaaniyantra but VAANIYANTRA_WEBHOOK_SECRET is missing — webhooks will be rejected (fail closed).");
@@ -107,6 +119,7 @@ export function integrationStatus(cfg: AppConfig = config()): IntegrationStatus 
     voiceProvider: cfg.VOICE_PROVIDER,
     voiceMode,
     vaani,
+    vaaniAi,
     telegram: {
       configured: telegramConfigured,
       urgentChat: Boolean(cfg.TELEGRAM_URGENT_CHAT_ID),

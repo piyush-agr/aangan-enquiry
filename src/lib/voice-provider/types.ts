@@ -32,6 +32,10 @@ export interface NormalisedCallEvent {
   collectedData?: Record<string, string | number | boolean | null>;
   recordingUrl?: string;
   transcript?: TranscriptTurn[];
+  /** Provider-reported usage in the provider's own unit (Vaani AI: credits). Converted to ₹ only with a configured rate. */
+  providerUsage?: { credits: number };
+  /** Provider-specific first-response measurement, when the transcript alone cannot give one. */
+  firstResponse?: { at: Date; method: string };
   /** Only set when the provider actually reports a cost for this call. */
   providerCost?: { amount: number; currency: string };
   isDemo: boolean;

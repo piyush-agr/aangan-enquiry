@@ -6,7 +6,7 @@ import { db } from "@/lib/db/client";
 
 const body = z.object({
   provider: z.string().regex(/^[a-z0-9_-]{2,40}$/),
-  category: z.enum(["voice_minute", "telephony_minute"]),
+  category: z.enum(["voice_minute", "telephony_minute", "credit"]),
   unit: z.enum(COST_UNITS),
   rate: z.number().positive().max(10_000),
   currency: z.string().regex(/^[A-Z]{3}$/).default("INR"),

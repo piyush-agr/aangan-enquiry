@@ -31,9 +31,9 @@ export function RateForm() {
     >
       {msg ? <div className={`alert ${msg.ok ? "ok" : "err"}`} role="status">{msg.text}</div> : null}
       <div className="filters">
-        <label className="f">Provider<input name="provider" defaultValue="vaaniyantra" required pattern="[a-z0-9_-]{2,40}" /></label>
-        <label className="f">What it covers<select name="category"><option value="voice_minute">Voice agent minutes</option><option value="telephony_minute">Phone-line minutes (Twilio, Exotel…)</option></select></label>
-        <label className="f">Billed per<select name="unit"><option value="minute">minute, pro-rated</option><option value="minute_rounded_up">started minute</option></select></label>
+        <label className="f">Provider<input name="provider" defaultValue="vaani" required pattern="[a-z0-9_-]{2,40}" /></label>
+        <label className="f">What it covers<select name="category"><option value="credit">Vaani credits (₹ per credit)</option><option value="voice_minute">Voice agent minutes</option><option value="telephony_minute">Phone-line minutes (Twilio, Exotel…)</option></select></label>
+        <label className="f">Billed per<select name="unit"><option value="credit">credit</option><option value="minute">minute, pro-rated</option><option value="minute_rounded_up">started minute</option></select></label>
         <label className="f">Rate (₹)<input name="rate" type="number" step="0.0001" min="0.0001" required /></label>
       </div>
       <label className="f">Where this rate comes from<input name="source" required minLength={5} placeholder="e.g. VaaniYantra Settings → Billing, checked 10 Oct 2026" /></label>
@@ -55,7 +55,7 @@ export function ActualCostForm() {
     >
       {msg ? <div className={`alert ${msg.ok ? "ok" : "err"}`} role="status">{msg.text}</div> : null}
       <div className="filters">
-        <label className="f">Provider<input name="provider" defaultValue="vaaniyantra" required pattern="[a-z0-9_-]{2,40}" /></label>
+        <label className="f">Provider<input name="provider" defaultValue="vaani" required pattern="[a-z0-9_-]{2,40}" /></label>
         <label className="f">Amount (₹)<input name="amount" type="number" step="0.01" min="0" required /></label>
         <label className="f">Period ending<input name="periodEnd" type="date" required /></label>
         <label className="f">Invoice reference<input name="note" required minLength={3} placeholder="e.g. Invoice INV-0042, Sept 2026" /></label>

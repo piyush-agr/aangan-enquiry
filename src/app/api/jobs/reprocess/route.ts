@@ -2,6 +2,7 @@ import { timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 import { config } from "@/lib/config/env";
 import { reprocessPending } from "@/lib/telephony-events/ingest";
+import { enrichVaani } from "@/lib/telephony-events/vaani-flow";
 import { VaaniYantraAdapter } from "@/lib/voice-provider/vaaniyantra";
 
 export const dynamic = "force-dynamic";
@@ -18,7 +19,7 @@ function authorised(req: Request) {
 async function handle(req: Request) {
   if (!authorised(req)) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const adapter = new VaaniYantraAdapter(config());
-  const results = await reprocessPending(config().VOICE_PROVIDER === "vaaniyantra" ? (e) => adapter.enrich(e) : undefined);
+  const results = await reprocessPending((e) => (e.provider === "vaani" ? enrichVaani(e) : e.provider === "vaaniyantra" ? adapter.enrich(e) : Promise.resolve(e)));
   return NextResponse.json({ examined: results.length, processed: results.filter((r) => r.status === "PROCESSED").length, results });
 }
 export const GET = handle;

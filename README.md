@@ -6,7 +6,7 @@ Aangan Studio (Pune, 14 designers, ~200 enquiries a month) loses enquiries: abou
 
 **Live app:** https://aangan-enquiry-inky.vercel.app (Vercel + Neon Postgres, mock voice mode) · **Health:** https://aangan-enquiry-inky.vercel.app/api/health
 
-> **Integration status:** voice provider **VaaniYantra: implemented against its public docs, mocked in tests, awaiting account credentials**. Telegram: **implemented, tested with a mocked Bot API, awaiting a bot token**. The app runs fully in **mock mode** with an in-app call simulator.
+> **Integration status:** Telegram handoff **live** (@aangan_designers_pa_bot). Voice: **Vaani AI** adapter implemented against docs.vaanivoice.ai and tested with signed sample payloads (VaaniYantra adapter also included). The app runs fully in **mock mode** with an in-app call simulator.
 
 ## What it does
 
@@ -64,7 +64,8 @@ Override databases with `TEST_DATABASE_URL` / `E2E_DATABASE_URL`. Integration te
 
 ## Configure the real services (no code changes)
 
-- **VaaniYantra:** [docs/vaaniyantra.md](docs/vaaniyantra.md). Create the agent with the text from *Settings*, connect a number, add the webhook, set `VOICE_PROVIDER=vaaniyantra` + key + secret.
+- **Vaani AI (course platform):** [docs/vaani.md](docs/vaani.md). Create the agent with the text from *Settings*, point an Agent Webhook at `/api/webhooks/vaani?key=…`, set `VOICE_PROVIDER=vaani` + key + secret.
+- **VaaniYantra (alternative):** [docs/vaaniyantra.md](docs/vaaniyantra.md). Create the agent with the text from *Settings*, connect a number, add the webhook, set `VOICE_PROVIDER=vaaniyantra` + key + secret.
 - **Telegram:** [docs/telegram.md](docs/telegram.md). Set `TELEGRAM_BOT_TOKEN` + `TELEGRAM_DESIGNER_CHAT_ID`.
 - **Costs:** enter the per-minute rate from VaaniYantra → Settings → Billing in *Settings*. Record invoices as actuals.
 - **Deploy:** [docs/deployment.md](docs/deployment.md) (Vercel + Supabase, cron, backups).

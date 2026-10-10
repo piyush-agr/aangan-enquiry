@@ -14,7 +14,7 @@ import { costRates, costRecords, type CostRate } from "@/lib/db/schema";
  */
 
 export const PER_MINUTE_CATEGORIES = ["voice_minute", "telephony_minute"] as const;
-export const COST_UNITS = ["minute", "minute_rounded_up", "month"] as const;
+export const COST_UNITS = ["minute", "minute_rounded_up", "credit", "month"] as const;
 
 type Tx = Parameters<Parameters<DB["transaction"]>[0]>[0];
 
@@ -29,6 +29,7 @@ export interface CallCostInput {
   provider: string;
   durationSec?: number | null;
   providerCost?: { amount: number; currency: string };
+  providerUsage?: { credits: number };
   incurredAt: Date;
   isDemo: boolean;
 }
@@ -54,6 +55,26 @@ export async function recordCallCosts(tx: Tx, input: CallCostInput) {
       currency: input.providerCost.currency,
       amount: String(input.providerCost.amount),
       valueType: "ACTUAL",
+      isDemo: input.isDemo,
+      incurredAt: input.incurredAt,
+    });
+  } else if (input.providerUsage) {
+    // Vaani AI reports usage in credits (call-history `call_cost`). The credit count is provider-reported;
+    // its ₹ value is ESTIMATED from an admin-entered ₹-per-credit rate, or UNKNOWN without one.
+    const r = rates.find((x) => x.category === "credit" && x.provider === input.provider);
+    const credits = input.providerUsage.credits;
+    rows.push({
+      enquiryId: input.enquiryId,
+      providerCallId: input.providerCallId,
+      provider: input.provider,
+      category: "voice_call_credits",
+      quantity: String(credits),
+      unit: "credit",
+      rateSource: r ? `provider-reported ${credits} credits × ${r.source}` : `provider-reported ${credits} credits; no ₹-per-credit rate configured`,
+      rateValue: r?.rate ?? null,
+      currency: r?.currency ?? "INR",
+      amount: r ? (credits * Number(r.rate)).toFixed(4) : null,
+      valueType: r ? "ESTIMATED" : "UNKNOWN",
       isDemo: input.isDemo,
       incurredAt: input.incurredAt,
     });
