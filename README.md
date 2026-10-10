@@ -6,7 +6,7 @@ Aangan Studio (Pune, 14 designers, ~200 enquiries a month) loses enquiries: abou
 
 **Live app:** https://aangan-enquiry-inky.vercel.app (Vercel + Neon Postgres, mock voice mode) · **Health:** https://aangan-enquiry-inky.vercel.app/api/health
 
-> **Integration status:** Telegram handoff **live** (@aangan_designers_pa_bot). Voice: **Vaani AI live** (`VOICE_PROVIDER=vaani`): agent `aangan-front-desk` configured, signed Agent Webhook registered and receiving `call_started` events from test calls (HTTP 200 in Vercel logs). `call_ended` / `call_postprocessing` were enabled after the first test calls; an end-to-end live transcript has not yet been observed. The full pipeline (transcript → rules → Neon → Telegram) is verified with the in-app simulator and 138 automated tests.
+> **Integration status:** Telegram handoff **live** (@aangan_designers_pa_bot). Voice: **Vaani AI live and verified end to end** (10 Oct 2026, 23:07 IST): a Vaani test call (agent `aangan-front-desk`) sent `call_postprocessing` to the signed webhook and was saved as enquiry AAN-00022 with transcript, evidence and a rules verdict. The verdict was *Incomplete*: speech-to-text heard the locality as "Koturur", and the rules only trust the caller's own words, so a follow-up was raised instead of a guess. Known gaps from that call: received time and duration were not joined from `call_started` for browser (WebRTC) test calls, and the Vaani call-history lookup returned HTTP 401, so the call's cost shows as Unknown. Also verified with the in-app simulator and 138 automated tests.
 
 ## What it does
 
