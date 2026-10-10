@@ -7,7 +7,7 @@
    DATABASE_URL="postgres://…" ADMIN_EMAIL=nikhil@… ADMIN_PASSWORD='long-password' npm run db:seed
    ```
 3. **Vercel:** import the GitHub repo. Framework preset Next.js. Add env vars from `.env.example`: `APP_ENV=production`, `APP_BASE_URL=https://<project>.vercel.app`, `DATABASE_URL`, `SESSION_SECRET` (new random value), `CRON_SECRET`, and Telegram/VaaniYantra values when ready. Keep `VOICE_PROVIDER=mock` until VaaniYantra is set up.
-4. `vercel.json` schedules `/api/jobs/reprocess` every 15 minutes (Vercel sends `Authorization: Bearer $CRON_SECRET`). Hobby plans only allow daily crons; change the schedule to `0 3 * * *` there.
+4. `vercel.json` schedules `/api/jobs/reprocess` once a day (Hobby plans allow daily crons only; Vercel sends `Authorization: Bearer $CRON_SECRET`). On Pro, change it to `*/15 * * * *`. Failed events can also be re-processed any time by calling the endpoint with the secret.
 5. Deploy, then open `/api/health` (expect `"database":"ok"`), sign in, run a simulator scenario.
 6. Follow `docs/vaaniyantra.md` → "Going live".
 
