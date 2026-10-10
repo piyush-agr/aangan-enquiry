@@ -4,6 +4,8 @@ MESA AI and its Application · Founder's Office · Cohort C4 · **Case 03: Nikhi
 
 Aangan Studio (Pune, 14 designers, ~200 enquiries a month) loses enquiries: about half get no reply within 48 hours, a third arrive outside the 10 am–7 pm front-desk hours, and a reply within an hour converts at four times the next-day rate. This app answers every incoming **phone** call with a voice agent, applies Nikhil's own qualification rubric, sends designers a complete handoff on Telegram, escalates existing-client complaints, and gives Nikhil a dashboard of what it handles, what it costs, and what it generates.
 
+**Live app:** https://aangan-enquiry-inky.vercel.app (Vercel + Neon Postgres, mock voice mode) · **Health:** https://aangan-enquiry-inky.vercel.app/api/health
+
 > **Integration status:** voice provider **VaaniYantra: implemented against its public docs, mocked in tests, awaiting account credentials**. Telegram: **implemented, tested with a mocked Bot API, awaiting a bot token**. The app runs fully in **mock mode** with an in-app call simulator.
 
 ## What it does
