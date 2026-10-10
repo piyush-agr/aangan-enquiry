@@ -1,0 +1,1 @@
+ALTER TABLE "call_events" ADD COLUMN "locked_until" timestamp with time zone;
