@@ -6,7 +6,7 @@ Aangan Studio (Pune, 14 designers, ~200 enquiries a month) loses enquiries: abou
 
 **Live app:** https://aangan-enquiry-inky.vercel.app (Vercel + Neon Postgres, mock voice mode) · **Health:** https://aangan-enquiry-inky.vercel.app/api/health
 
-> **Integration status:** Telegram handoff **live** (@aangan_designers_pa_bot). Voice: **Vaani AI** adapter implemented against docs.vaanivoice.ai and tested with signed sample payloads (VaaniYantra adapter also included). The app runs fully in **mock mode** with an in-app call simulator.
+> **Integration status:** Telegram handoff **live** (@aangan_designers_pa_bot). Voice: **Vaani AI live** (`VOICE_PROVIDER=vaani`): agent `aangan-front-desk` configured, signed Agent Webhook registered and receiving `call_started` events from test calls (HTTP 200 in Vercel logs). `call_ended` / `call_postprocessing` were enabled after the first test calls; an end-to-end live transcript has not yet been observed. The full pipeline (transcript → rules → Neon → Telegram) is verified with the in-app simulator and 138 automated tests.
 
 ## What it does
 

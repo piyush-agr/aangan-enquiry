@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Aangan Components Map</title>
+<style>
+  :root {
+    --bg: #f8f6f1; --ink: #23201c; --muted: #6b665e; --line: #e4e0d8;
+    --people-bg: #fde8e1; --people-bd: #efb9a8; --people-ink: #7a2e1a;
+    --ai-bg: #eceafc; --ai-bd: #c5c0f0; --ai-ink: #2f2a7a;
+    --sys-bg: #efede7; --sys-bd: #d6d2c8; --sys-ink: #2c2a26;
+    --db: #1f5fa8; --arrow: #55524c; --learn: #7b6fd0;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 13px/1.35 "Inter", "Helvetica Neue", Arial, sans-serif; }
+  .page { width: 1180px; padding: 40px 46px 36px; position: relative; }
+  h1 { font-size: 26px; margin: 0 0 8px; letter-spacing: -0.3px; }
+  .sub { color: var(--muted); margin: 0 0 6px; font-size: 13px; }
+  .sub b { color: var(--ink); }
+  .head { display: grid; grid-template-columns: 116px repeat(6, 1fr); gap: 0 34px; background: #26231f; color: #fff;
+          border-radius: 6px; padding: 12px 0; margin-top: 18px; font-weight: 600; font-size: 12px; text-align: center; }
+  .grid { position: relative; display: grid; grid-template-columns: 116px repeat(6, 1fr); column-gap: 34px; row-gap: 16px; margin-top: 10px; }
+  .cols { position: absolute; inset: 0; display: grid; grid-template-columns: 116px repeat(6, 1fr); column-gap: 34px; pointer-events: none; }
+  .cols div { border-left: 1px solid var(--line); margin-left: -17px; }
+  .cols div:first-child { border: 0; }
+  .sec { grid-column: 1 / -1; margin: 6px 0 -4px; }
+  .sec span { background: #e6e2d9; border-radius: 10px; padding: 3px 9px; font-size: 10px; font-weight: 700; letter-spacing: .8px; color: #4b473f; }
+  .box { min-height: 62px; border-radius: 5px; border: 1px solid; padding: 9px 9px; display: flex; flex-direction: column;
+         justify-content: center; text-align: center; font-size: 11.5px; position: relative; z-index: 2; }
+  .box b.n { font-weight: 700; margin-right: 3px; }
+  .actor { font-weight: 700; font-size: 12px; }
+  .actor small { display: block; font-weight: 400; font-size: 10.5px; color: var(--muted); margin-top: 2px; }
+  .people { background: var(--people-bg); border-color: var(--people-bd); color: var(--people-ink); }
+  .ai { background: var(--ai-bg); border-color: var(--ai-bd); color: var(--ai-ink); }
+  .sys { background: var(--sys-bg); border-color: var(--sys-bd); color: var(--sys-ink); }
+  .db { border: 2px solid var(--db); }
+  .strong { border: 2px solid #a83a22; }
+  .badge { position: absolute; top: -9px; right: -9px; background: var(--db); color: #fff; border-radius: 50%; width: 22px; height: 22px;
+           font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  svg.wires { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; overflow: visible; }
+  .legend { display: flex; gap: 28px; align-items: center; margin-top: 28px; font-size: 12px; color: #3d3a34; flex-wrap: wrap; }
+  .sw { display: inline-block; width: 13px; height: 13px; border-radius: 3px; border: 1px solid; vertical-align: -2px; margin-right: 6px; }
+  .ln { display: inline-block; width: 30px; height: 0; border-top: 2px solid var(--db); vertical-align: middle; margin-right: 6px; }
+  .ln.d { border-top: 2px dashed var(--arrow); }
+  .notes { margin-top: 22px; font-size: 12px; color: var(--muted); }
+  .notes p { margin: 0 0 7px; }
+  .notes b { color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>Aangan: phone enquiry components map</h1>
+  <p class="sub">Who does what, step by step, from the first ring to the designer follow-up. Read each row left to right. Steps are numbered 1 to 35.</p>
+  <p class="sub"><b>One Vaani call answers the enquiry. Our code (not an AI) decides if the lead qualifies. Everything after the call reads from Neon.</b></p>
+
+  <div class="head"><div>Actor</div><div>Trigger</div><div>Input</div><div>Context</div><div>Processing</div><div>AI</div><div>Output</div></div>
+
+  <div class="grid" id="grid">
+    <div class="cols"><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+
+    <div class="sec" style="grid-row:1"><span>DURING THE CALL</span></div>
+
+    <div class="box actor people" style="grid-row:2;grid-column:1">Caller</div>
+    <div class="box people" id="b1" style="grid-row:2;grid-column:2"><span><b class="n">1</b>Calls Aangan Studio, any hour, day or night</span></div>
+
+    <div class="box actor sys" style="grid-row:3;grid-column:1">Agent knowledge<small>GitHub repo → Vaani prompt</small></div>
+    <div class="box sys" id="b2" style="grid-row:3;grid-column:4"><span><b class="n">2</b>Agent text from the repo: services, areas, the 5 criteria, the approved pricing line. No price figures</span></div>
+
+    <div class="box actor ai" style="grid-row:4;grid-column:1">Vaani agent<small>aangan-front-desk</small></div>
+    <div class="box ai" id="b3" style="grid-row:4;grid-column:3"><span><b class="n">3</b>Picks up with the fixed greeting. Logs room, number, time</span></div>
+    <div class="box ai" id="b4" style="grid-row:4;grid-column:5"><span><b class="n">4</b>Asks project type, area, scope, timeline, owner. One follow-up if unclear</span></div>
+    <div class="box ai" id="b5" style="grid-row:4;grid-column:6"><span><b class="n">5</b>Gemini 3.5 Flash runs the talk (GPT-4o-mini fallback)</span></div>
+
+    <div class="box actor ai" style="grid-row:5;grid-column:1">Price rule<small>same call</small></div>
+    <div class="box ai" id="b6" style="grid-row:5;grid-column:5"><span><b class="n">6</b>Caller asks “how much will it cost?”</span></div>
+    <div class="box ai strong" id="b7" style="grid-row:5;grid-column:7"><span><b class="n">7</b>Reads the approved response word for word. Offers a designer callback</span></div>
+
+    <div class="box actor sys" style="grid-row:6;grid-column:1">Call events<small>Vaani webhooks</small></div>
+    <div class="box sys" id="b8" style="grid-row:6;grid-column:3"><span><b class="n">8</b>call_started: arrival time and caller number, pushed live</span></div>
+    <div class="box sys" id="b9" style="grid-row:6;grid-column:7"><span><b class="n">9</b>call_ended, then call_postprocessing with the full transcript</span></div>
+
+    <div class="sec" style="grid-row:7"><span>AFTER THE CALL</span></div>
+
+    <div class="box actor sys" style="grid-row:8;grid-column:1">Webhook route<small>Vercel · /api/webhooks/vaani</small></div>
+    <div class="box sys" id="b10" style="grid-row:8;grid-column:3"><span><b class="n">10</b>Receives each event (Vaani retries up to 5 times)</span></div>
+    <div class="box sys" id="b11" style="grid-row:8;grid-column:5"><span><b class="n">11</b>Checks key / HMAC, rate-limits, ignores duplicates. Fake posts rejected</span></div>
+    <div class="box sys" id="b12" style="grid-row:8;grid-column:7"><span><b class="n">12</b>Replies 200 at once; processing runs after the reply</span></div>
+
+    <div class="box actor sys" style="grid-row:9;grid-column:1">Rule engine<small>our code, no AI</small></div>
+    <div class="box sys" id="b13" style="grid-row:9;grid-column:5"><span><b class="n">13</b>Pulls facts from the transcript, each with the caller's own words as evidence</span></div>
+    <div class="box sys" id="b14" style="grid-row:9;grid-column:6"><span><b class="n">14</b>Scores Nikhil's 5 criteria: PASS / FAIL / UNCLEAR</span></div>
+    <div class="box sys" id="b15" style="grid-row:9;grid-column:7"><span><b class="n">15</b>Qualified · Not qualified · Incomplete · Human review · Urgent · Missed</span></div>
+
+    <div class="box actor sys" style="grid-row:10;grid-column:1">Pricing audit</div>
+    <div class="box sys" id="b16" style="grid-row:10;grid-column:5"><span><b class="n">16</b>Scans the summary and notes for anything that looks like a price</span></div>
+    <div class="box sys" id="b17" style="grid-row:10;grid-column:7"><span><b class="n">17</b>Redacts and flags it. Budget floor stays server-only</span></div>
+
+    <div class="box actor sys db" style="grid-row:11;grid-column:1">Neon<small>Postgres</small></div>
+    <div class="box sys" id="b18" style="grid-row:11;grid-column:5"><span><b class="n">18</b>Saves enquiry, facts, evidence and events in one transaction</span></div>
+    <div class="box sys db" id="b19" style="grid-row:11;grid-column:7"><span class="badge">DB</span><span><b class="n">19</b>Source of truth: every step below reads from here</span></div>
+
+    <div class="box actor sys" style="grid-row:12;grid-column:1">Cost tracker</div>
+    <div class="box sys" id="b20" style="grid-row:12;grid-column:3"><span><b class="n">20</b>Reads credits used from Vaani call history</span></div>
+    <div class="box sys" id="b21" style="grid-row:12;grid-column:5"><span><b class="n">21</b>Credits × the ₹ rate entered in Settings</span></div>
+    <div class="box sys" id="b22" style="grid-row:12;grid-column:7"><span><b class="n">22</b>Every cost labelled Actual, Estimated or Unknown. Never guessed</span></div>
+
+    <div class="box actor sys" style="grid-row:13;grid-column:1">Handoff<small>Telegram bot</small></div>
+    <div class="box sys" id="b23" style="grid-row:13;grid-column:3"><span><b class="n">23</b>Reads qualified and urgent enquiries from Neon</span></div>
+    <div class="box sys" id="b24" style="grid-row:13;grid-column:5"><span><b class="n">24</b>One message per enquiry and type. 3 retries, failures logged</span></div>
+    <div class="box people" id="b25" style="grid-row:13;grid-column:7"><span><b class="n">25</b>Aangan Designers group gets the lead card and calls back</span></div>
+
+    <div class="box actor people" style="grid-row:14;grid-column:1">Studio dashboard<small>Vercel</small></div>
+    <div class="box people" id="b26" style="grid-row:14;grid-column:3"><span><b class="n">26</b>Reads enquiries and transcripts from Neon</span></div>
+    <div class="box people" id="b27" style="grid-row:14;grid-column:5"><span><b class="n">27</b>Enquiries, Needs attention queue, Costs, Settings</span></div>
+    <div class="box people strong" id="b28" style="grid-row:14;grid-column:7"><span><b class="n">28</b>Front desk resolves reviews, calls back missed calls, resends handoffs</span></div>
+
+    <div class="box actor people" style="grid-row:15;grid-column:1">Nikhil<small>dashboard home</small></div>
+    <div class="box people" id="b29" style="grid-row:15;grid-column:3"><span><b class="n">29</b>Reads counts and timings from Neon</span></div>
+    <div class="box people" id="b30" style="grid-row:15;grid-column:5"><span><b class="n">30</b>Qualified vs not, first-response time, cost per call</span></div>
+    <div class="box people" id="b31" style="grid-row:15;grid-column:7"><span><b class="n">31</b>Sees the funnel without pulling reports</span></div>
+
+    <div class="box actor sys" style="grid-row:16;grid-column:1">Daily job<small>Vercel Cron</small></div>
+    <div class="box sys" id="b32" style="grid-row:16;grid-column:2"><span><b class="n">32</b>Runs every day, 09:00 IST</span></div>
+    <div class="box sys" id="b33" style="grid-row:16;grid-column:5"><span><b class="n">33</b>Re-runs events that failed or got stuck</span></div>
+
+    <div class="box actor sys" style="grid-row:17;grid-column:1">Simulator<small>mock mode</small></div>
+    <div class="box people" id="b34" style="grid-row:17;grid-column:2"><span><b class="n">34</b>Staff plays a test call inside the app</span></div>
+    <div class="box sys" id="b35" style="grid-row:17;grid-column:5"><span><b class="n">35</b>Same pipeline, tagged 🧪 DEMO, kept out of metrics</span></div>
+
+    <svg class="wires" id="wires"><defs>
+      <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#55524c"/></marker>
+      <marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f5fa8"/></marker>
+      <marker id="ahp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7b6fd0"/></marker>
+    </defs></svg>
+  </div>
+
+  <div class="legend">
+    <span><i class="sw" style="background:var(--people-bg);border-color:var(--people-bd)"></i>People</span>
+    <span><i class="sw" style="background:var(--ai-bg);border-color:var(--ai-bd)"></i>AI</span>
+    <span><i class="sw" style="background:var(--sys-bg);border-color:var(--sys-bd)"></i>System (our code)</span>
+    <span><i class="ln"></i>Neon: every step reads from it</span>
+    <span><i class="ln d"></i>Retry / reprocess</span>
+    <span><i class="ln" style="border-top:2px dashed var(--learn)"></i>Re-uses the same pipeline</span>
+  </div>
+
+  <div class="notes">
+    <p>Before: replies took up to 48 hours. Now: every call is answered, qualified by fixed rules, and qualified leads reach the designers on Telegram within seconds of the transcript arriving.</p>
+    <p><b>Built with:</b> Claude Code (build, tests, deploy), GitHub (code), Vercel (app + cron), Neon (Postgres), Vaani AI (voice agent), Telegram Bot API (handoff).</p>
+    <p><b>Price rule:</b> the agent never says a price. It reads one approved response, and the audit in steps 16–17 flags any slip after the call.</p>
+    <p>Trade-off: Vaani offers no mid-call hook, so a price slip by the voice model is caught and flagged after the call, not blocked live. Qualification never depends on the voice model's own verdict.</p>
+  </div>
+</div>
+
+<script>
+const grid = document.getElementById('grid'), svg = document.getElementById('wires');
+const g = grid.getBoundingClientRect();
+const R = id => { const r = document.getElementById(id).getBoundingClientRect(); return { l: r.left - g.left, r: r.right - g.left, t: r.top - g.top, b: r.bottom - g.top, cx: (r.left + r.right) / 2 - g.left, cy: (r.top + r.bottom) / 2 - g.top }; };
+function path(d, opt = {}) {
+  const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  p.setAttribute('d', d); p.setAttribute('fill', 'none');
+  p.setAttribute('stroke', opt.color || '#55524c'); p.setAttribute('stroke-width', opt.w || 1.4);
+  if (opt.dash) p.setAttribute('stroke-dasharray', opt.dash);
+  if (opt.arrow !== false) p.setAttribute('marker-end', `url(#${opt.marker || 'ah'})`);
+  svg.appendChild(p);
+}
+// same row: right edge → left edge
+const h = (a, b, o) => { const A = R(a), B = R(b); path(`M${A.r},${A.cy} L${B.l},${B.cy}`, o); };
+// straight down (same column)
+const v = (a, b, o) => { const A = R(a), B = R(b); path(`M${A.cx},${A.b} L${B.cx},${B.t}`, o); };
+// elbow: from right edge across, then down into top of b
+const rd = (a, b, o) => { const A = R(a), B = R(b); path(`M${A.r},${A.cy} L${B.cx},${A.cy} L${B.cx},${B.t}`, o); };
+// elbow: from bottom of a, down to gap, across, down into b
+const dd = (a, b, o) => { const A = R(a), B = R(b); const y = B.t - 9; path(`M${A.cx},${A.b} L${A.cx},${y} L${B.cx},${y} L${B.cx},${B.t}`, o); };
+
+rd('b1', 'b3');
+dd('b2', 'b4');
+h('b3', 'b4'); h('b4', 'b5');
+v('b4', 'b6'); h('b6', 'b7');
+v('b3', 'b8');
+dd('b5', 'b9');
+dd('b8', 'b10'); dd('b9', 'b10');
+h('b10', 'b11'); h('b11', 'b12');
+v('b11', 'b13'); h('b13', 'b14'); h('b14', 'b15');
+v('b13', 'b16'); h('b16', 'b17');
+v('b16', 'b18'); h('b18', 'b19');
+h('b20', 'b21'); h('b21', 'b22');
+h('b23', 'b24'); h('b24', 'b25');
+h('b26', 'b27'); h('b27', 'b28');
+h('b29', 'b30'); h('b30', 'b31');
+h('b32', 'b33');
+h('b34', 'b35');
+
+// Neon bus: from step 18 out to a vertical line left of the Input column, branching into each reader.
+const N = R('b18'), xs = R('b20').l - 16;
+const readers = ['b20', 'b23', 'b26', 'b29'].map(R);
+const dbo = { color: '#1f5fa8', w: 1.8 };
+path(`M${N.l},${N.cy} L${xs},${N.cy} L${xs},${readers[readers.length - 1].cy}`, { ...dbo, arrow: false });
+readers.forEach(r => path(`M${xs},${r.cy} L${r.l},${r.cy}`, { ...dbo, marker: 'ahb' }));
+
+// Daily job re-runs the webhook processing (dashed, up the right margin of Processing)
+const J = R('b33'), W = R('b11'), xr = J.r + 14;
+path(`M${J.r},${J.cy} L${xr},${J.cy} L${xr},${W.cy} L${W.r},${W.cy}`, { dash: '5 4' });
+// Simulator re-uses the pipeline (dashed purple into step 13)
+const S = R('b35'), E = R('b13'), xl = S.l - 14;
+path(`M${S.l},${S.cy} L${xl},${S.cy} L${xl},${E.cy} L${E.l},${E.cy}`, { color: '#7b6fd0', dash: '5 4', marker: 'ahp' });
+</script>
+</body>
+</html>
