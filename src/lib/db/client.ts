@@ -16,7 +16,8 @@ export function pool(): Pool {
       connectionTimeoutMillis: 5_000,
       idleTimeoutMillis: 10_000,
       statement_timeout: 15_000,
-      ssl: /sslmode=require|supabase\.co|pooler\.supabase/.test(url) ? { rejectUnauthorized: false } : undefined,
+      // Neon presents a publicly trusted certificate (verified); Supabase pooler certs need its CA, so it is relaxed there only.
+      ssl: /sslmode=require|neon\.tech|supabase\.co|pooler\.supabase/.test(url) ? { rejectUnauthorized: !/supabase/.test(url) } : undefined,
     });
     globalForDb.__aanganPool.on("error", (err) => console.error(JSON.stringify({ level: "error", msg: "pg pool error", error: err.message })));
   }

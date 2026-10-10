@@ -18,7 +18,8 @@
     "db:seed": "tsx --conditions=react-server scripts/seed.ts",
     "data:purge": "tsx --conditions=react-server scripts/purge.ts",
     "check:bundle": "tsx --conditions=react-server scripts/check-bundle-leaks.ts",
-    "verify": "npm run lint && npm run typecheck && npm test && npm run build && npm run check:bundle"
+    "verify": "npm run lint && npm run typecheck && npm test && npm run build && npm run check:bundle",
+    "vercel-build": "tsx --conditions=react-server scripts/migrate.ts && tsx --conditions=react-server scripts/seed.ts --optional && next build"
   },
   "engines": {
     "node": ">=20"

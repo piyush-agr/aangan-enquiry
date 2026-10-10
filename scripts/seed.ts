@@ -1,5 +1,5 @@
 import "./load-env";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { hashPassword } from "../src/lib/auth/password";
 import { runScript } from "../src/lib/conversation/agent";
 import { SCENARIOS } from "../src/lib/conversation/scenarios";
@@ -16,14 +16,21 @@ import { simulatedCallEvent } from "../src/lib/voice-provider/mock";
 async function main() {
   const email = process.env.ADMIN_EMAIL?.toLowerCase();
   const password = process.env.ADMIN_PASSWORD;
-  if (!email || !password) throw new Error("Set ADMIN_EMAIL and ADMIN_PASSWORD (min 10 chars) to seed the admin user.");
+  if (!email || !password) {
+    // In the Vercel build (--optional) a missing admin is a warning, not a failed deploy.
+    if (process.argv.includes("--optional")) return console.warn("⚠ ADMIN_EMAIL / ADMIN_PASSWORD not set — no admin user created.");
+    throw new Error("Set ADMIN_EMAIL and ADMIN_PASSWORD (min 10 chars) to seed the admin user.");
+  }
   const hash = await hashPassword(password);
   const [existing] = await db().select().from(users).where(eq(users.email, email)).limit(1);
   if (existing) await db().update(users).set({ passwordHash: hash, role: "ADMIN" }).where(eq(users.id, existing.id));
   else await db().insert(users).values({ email, name: process.env.ADMIN_NAME ?? "Nikhil Deshpande", role: "ADMIN", passwordHash: hash });
   console.log(`✔ admin user ready: ${email}`);
 
-  if (process.argv.includes("--demo")) {
+  const wantDemo = process.argv.includes("--demo") || process.env.SEED_DEMO === "true";
+  const existingDemo = ((await db().execute(sql`select count(*)::int as n from enquiries where is_demo`)).rows[0] as { n: number } | undefined)?.n ?? 0;
+  if (wantDemo && existingDemo > 0) console.log(`  demo data already present (${existingDemo} records) — not adding more`);
+  if (wantDemo && existingDemo === 0) {
     let i = 0;
     let prev = new Date();
     for (const s of SCENARIOS) {
