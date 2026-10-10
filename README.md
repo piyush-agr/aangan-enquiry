@@ -69,6 +69,8 @@ Override databases with `TEST_DATABASE_URL` / `E2E_DATABASE_URL`. Integration te
 - **Costs:** enter the per-minute rate from VaaniYantra → Settings → Billing in *Settings*. Record invoices as actuals.
 - **Deploy:** [docs/deployment.md](docs/deployment.md) (Vercel + Supabase, cron, backups).
 
+![Components map](docs/img/components-map.png)
+
 More: [API and webhook reference](docs/api.md) · [Security and privacy](docs/security-privacy.md) · [Troubleshooting](docs/troubleshooting.md) · [Acceptance checklist](docs/acceptance.md)
 
 ## Project layout
